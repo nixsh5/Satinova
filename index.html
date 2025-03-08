@@ -340,6 +340,64 @@
             box-shadow: 0 5px 15px rgba(255,255,255,0.1);
         }
 
+        .celebrity-showcase {
+        padding: 6rem 2rem;
+        background: var(--light);
+        text-align: center;
+    }
+
+    .celebrity-showcase h2 {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .showcase-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .showcase-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: var(--transition);
+        background: var(--dark);
+        color: var(--light);
+    }
+
+    .showcase-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .showcase-item:hover {
+        transform: translateY(-10px);
+    }
+
+    .showcase-content {
+        padding: 1.5rem;
+    }
+
+    .showcase-content h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+    }
+
+    .showcase-content p {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
         /* Footer */
         footer {
             background: var(--dark);
@@ -450,6 +508,33 @@
             </div>
         </section>
     </main>
+
+    <section class="celebrity-showcase">
+        <h2>Spotlight This Week</h2>
+        <div class="showcase-grid">
+            <div class="showcase-item">
+                <img src="https://media.glamour.com/photos/5695e67493ef4b09520f508d/master/pass/beauty-2012-12-megan-fox-vampy-makeup-main.jpg" alt="Celebrity of the Week">
+                <div class="showcase-content">
+                    <h3>Megan Fox</h3>
+                    <p>Celebrity of the Week - "Satinova redefines elegance with every stitch!"</p>
+                </div>
+            </div>
+            <div class="showcase-item">
+                <img src="https://w0.peakpx.com/wallpaper/112/920/HD-wallpaper-celebrity-jordan-barrett.jpg" alt="Satinova Model 1">
+                <div class="showcase-content">
+                    <h3>Jordan Barett</h3>
+                    <p>Satinova Model - "Style that speaks sophistication and charm."</p>
+                </div>
+            </div>
+            <div class="showcase-item">
+                <img src="https://wallpaper-house.com/data/out/10/wallpaper2you_464200.jpg" alt="Satinova Model 2">
+                <div class="showcase-content">
+                    <h3>Olivia Grace</h3>
+                    <p>Satinova Model - "Timeless fashion, tailored for the modern muse."</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="personalization">
         <h2>Personalization Features</h2>
