@@ -16,8 +16,7 @@ Check out the live website here: [Satinova](https://nixsh5.github.io/Satinova/)
 ## 📌 Technologies Used  
 
 - **Frontend**: HTML, CSS, JavaScript  
-- **Frameworks**: Bootstrap (if used)  
-- **APIs**: AR and Virtual Try-On (if applicable)  
+- **APIs**: AR and Virtual Try-On  
 
 ## 📥 Installation & Setup  
 
