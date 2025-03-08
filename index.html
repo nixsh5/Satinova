@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satinova - Elegant Fashion</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-red: #e31837;
+            --primary-black: #1a1a1a;
+            --accent-gold: #d4af37;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-dark);
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--primary-black);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            color: var(--primary-red);
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-red);
+        }
+
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+            url('https://via.placeholder.com/1920x1080');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 4rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .personalization {
+            padding: 4rem 2rem;
+            background-color: var(--primary-black);
+            color: var(--text-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .feature-btn {
+            display: inline-block;
+            background-color: var(--primary-red);
+            color: var(--text-light);
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: var(--transition);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">SATINOVA</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="collections.html">Collections</a>
+            <a href="about.html">About</a>
+        </div>
+        <div class="nav-icons">
+            <a href="cart.html" class="cart-icon">
+                <span class="material-icons">shopping_bag</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Discover Timeless Elegance</h1>
+                <p>Explore our latest collection of premium fashion pieces</p>
+                <a href="shop.html" class="cta-button">Shop Now</a>
+            </div>
+        </section>
+
+        <section class="featured">
+            <h2>Featured Collections</h2>
+            <div class="featured-grid">
+                <div class="featured-item">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600" alt="Summer Collection">
+                    <h3>Summer Essentials</h3>
+                    <a href="collections.html#summer" class="subtle-button">View Collection</a>
+                </div>
+                <div class="featured-item">
+                    <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600" alt="Elegant Evening">
+                    <h3>Evening Wear</h3>
+                    <a href="collections.html#evening" class="subtle-button">View Collection</a>
+                </div>
+                <div class="featured-item">
+                    <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600" alt="Accessories">
+                    <h3>Accessories</h3>
+                    <a href="collections.html#accessories" class="subtle-button">View Collection</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="personalization">
+        <h2>Personalization Features</h2></p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Virtual Stencil</h3>
+                <p>Design your own patterns</p>
+                <a href="virtual-stencil.html" class="feature-btn">Try Now</a>
+            </div>
+            <div class="feature-card">
+                <h3>Write-to-Wear</h3>
+                <p>Custom text on apparels</p>
+                <a href="write-to-wear.html" class="feature-btn">Try Now</a>
+            </div>
+            <div class="feature-card">
+                <h3>AR Try-On</h3>
+                <p>Virtual fitting room</p>
+                <a href="ar-try-on.html" class="feature-btn">Try Now</a>
+            </div>
+            <div class="feature-card">
+                <h3>Trend to Play</h3>
+                <p>Style your avatar</p>
+                <a href="trend-to-play.html" class="feature-btn">Try Now</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Satinova</h4>
+                <p>Discover elegant fashion pieces crafted with passion and precision.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="shop.html">Shop</a>
+                <a href="collections.html">Collections</a>
+                <a href="about.html">About</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: contact@satinova.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Satinova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

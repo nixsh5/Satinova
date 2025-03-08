@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebAR Clothing Try-On</title>
+    <script src="https://cdn.jsdelivr.net/npm/deepar@latest"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        video { width: 100%; max-width: 600px; display: block; margin: auto; }
+        button { margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<h1>Try On Clothes in WebAR</h1>
+<video id="video" autoplay playsinline></video>
+<button onclick="loadClothingModel()">Try On Shirt</button>
+
+<script>
+    let deepAR;
+
+    async function initDeepAR() {
+        deepAR = await DeepAR.create({
+            licenseKey: "YOUR_DEEPAR_LICENSE_KEY",  // Replace with your DeepAR license key
+            canvas: document.createElement("canvas"),
+            width: 640,
+            height: 480,
+            faceTracking: false,
+            bodyTracking: true  // Enable body tracking
+        });
+
+        deepAR.startVideo(true);
+        document.getElementById("video").srcObject = deepAR.getVideoStream();
+    }
+
+    async function loadClothingModel() {
+        if (!deepAR) return;
+        await deepAR.switchEffect({
+            slot: "body",
+            path: "https://drive.google.com/file/d/114zT8lG5DpA1d3hUlwRVd4Ew1_xHTj0g/view?usp=sharing"  // Replace with your hosted 3D model
+        });
+    }
+
+    initDeepAR();
+</script>
+
+</body>
+</html>

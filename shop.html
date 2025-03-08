@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Satinova</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">SATINOVA</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="shop.html" class="active">Shop</a>
+            <a href="collections.html">Collections</a>
+            <a href="about.html">About</a>
+        </div>
+        <div class="nav-icons">
+            <a href="cart.html" class="cart-icon">
+                <span class="material-icons">shopping_bag</span>
+                <span class="cart-count">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="shop-page">
+        <div class="filters">
+            <h2>Filters</h2>
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <label><input type="checkbox" name="category" value="dresses"> Dresses</label>
+                <label><input type="checkbox" name="category" value="tops"> Tops</label>
+                <label><input type="checkbox" name="category" value="bottoms"> Bottoms</label>
+                <label><input type="checkbox" name="category" value="accessories"> Accessories</label>
+            </div>
+        </div>
+
+        <div class="products-grid" id="products-container">
+            <!-- Products will be populated by JavaScript -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About Satinova</h4>
+                <p>Discover elegant fashion pieces crafted with passion and precision.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="shop.html">Shop</a>
+                <a href="collections.html">Collections</a>
+                <a href="about.html">About</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: contact@satinova.com</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Satinova. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

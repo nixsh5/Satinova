@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            min-height: 100vh;
+            display: block;
+        }
+
+        .top-nav {
+            background-color: #333;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-left: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            margin-right: 2rem;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 4rem;
+            padding: 1rem;
+            gap: 2rem;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .sidebar {
+            width: 200px;
+            padding: 1rem;
+        }
+
+        .categories {
+            list-style: none;
+        }
+
+        .categories li {
+            margin-bottom: 1rem;
+        }
+
+        .categories a {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .categories a.active {
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filters select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            min-width: 120px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .product-item img {
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+            border: 1px solid #eee;
+        }
+
+        .product-item p {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .featured {
+            width: 300px;
+            padding: 1rem;
+        }
+
+        .featured img {
+            width: 300px;
+            height: 600px;
+            object-fit: cover;
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 1200px) {
+            .featured {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .categories {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .categories li {
+                margin-bottom: 0;
+            }
+
+            .product-item img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 4/5;
+            }
+
+            .brand-name {
+                margin-left: 1rem;
+            }
+
+            .nav-links {
+                margin-right: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="brand-name">Satinova</div>
+        <div class="nav-links">
+            <a href="#" class="active">CREATE</a>
+            <a href="#">TOP LOOKS</a>
+            <a href="#">STYLISTS</a>
+            <a href="#">SPRING 2024 LOOKS</a>
+            <a href="#">FEATURED DESIGNERS</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul class="categories">
+                <li><a href="#" class="active">ALL</a></li>
+                <li><a href="#">TOPS</a></li>
+                <li><a href="#">DRESSES</a></li>
+                <li><a href="#">BOTTOMS</a></li>
+                <li><a href="#">OUTERWEAR</a></li>
+                <li><a href="#">SHOES</a></li>
+                <li><a href="#">BAGS</a></li>
+                <li><a href="#">JEWELRY</a></li>
+                <li><a href="#">ACCESSORIES</a></li>
+                <li><a href="#">DESIGNER</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="filters">
+                <select>
+                    <option>ALL TRENDS</option>
+                </select>
+                <select>
+                    <option>BRAND</option>
+                </select>
+                <select>
+                    <option>COLOR</option>
+                </select>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 1">
+                    <p>Antik Denim Jeans</p>
+                </div>
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 2">
+                    <p>Designer Top</p>
+                </div>
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 3">
+                    <p>Summer Dress</p>
+                </div>
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 4">
+                    <p>Classic Jeans</p>
+                </div>
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 5">
+                    <p>Leather Mesh</p>
+                </div>
+                <div class="product-item">
+                    <img src="https://placehold.co/200x250" alt="Product 6">
+                    <p>Designer Blouse</p>
+                </div>
+            </div>
+        </main>
+
+        <aside class="featured">
+            <img src="https://placehold.co/300x600" alt="Featured Look">
+        </aside>
+    </div>
+</body>
+</html>

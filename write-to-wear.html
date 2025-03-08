@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write to Wear | Fashion Store</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #d84f57;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #d84f57;
+        }
+
+        .search-button {
+            background-color: #d84f57;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #c13c44;
+        }
+
+        .examples {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .example-tag {
+            background-color: #f0f0f0;
+            color: #666;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .example-tag:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .clothing-display {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clothing-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .clothing-info {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .clothing-info h3 {
+            margin-top: 0;
+            color: #d84f57;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d84f57;
+            margin: 15px 0;
+        }
+
+        .add-to-cart {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #3e8e41;
+        }
+
+        .placeholder-text {
+            color: #999;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 10px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .clothing-display {
+                width: 100%;
+                height: 400px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .search-input, .search-button {
+                border-radius: 4px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Write to Wear</h1>
+            <p class="subtitle">Describe your dream outfit and see it come to life</p>
+        </header>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="clothing-search" placeholder="Enter a color and clothing item (e.g., 'red dress')" />
+                <button class="search-button" id="search-btn">Search</button>
+            </div>
+            
+            <div class="examples">
+                <span class="example-tag">blue jeans</span>
+                <span class="example-tag">red dress</span>
+                <span class="example-tag">black shirt</span>
+                <span class="example-tag">green jacket</span>
+                <span class="example-tag">yellow skirt</span>
+            </div>
+        </div>
+
+        <div class="result-container">
+            <div id="initial-message" class="placeholder-text">
+                Enter a color and clothing item above to see matching results
+            </div>
+            
+            <div id="results-view" class="hidden">
+                <h2 class="result-title" id="result-title">Results for your search</h2>
+                
+                <div class="clothing-display">
+                    <img id="clothing-image" class="clothing-image" src="/api/placeholder/300/400" alt="Clothing item" />
+                </div>
+                
+                <div class="clothing-info">
+                    <h3 id="clothing-name">Item Name</h3>
+                    <p>
+                        <span class="color-swatch" id="color-swatch"></span>
+                        <span id="clothing-color">Color</span>
+                    </p>
+                    <p id="clothing-description">Enter a search above to see available items.</p>
+                    <p class="price" id="clothing-price">$0.00</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Clothing database - This would normally come from your product database
+        const clothingItems = {
+            "shirt": [
+                { 
+                    color: "red", 
+                    image: "Classic Red Shirt.jpeg",
+                    name: "Classic Red Shirt",
+                    description: "A vibrant red shirt perfect for any casual occasion.",
+                    price: "$29.99" 
+                },
+                { 
+                    color: "blue", 
+                    image: "Navy Blue Button-Up.jpeg",
+                    name: "Navy Blue Button-Up",
+                    description: "A stylish navy blue shirt that transitions perfectly from office to evening.",
+                    price: "$34.99" 
+                },
+                { 
+                    color: "black", 
+                    image: "Black Formal Shirt.jpeg",
+                    name: "Black Formal Shirt", 
+                    description: "An elegant black shirt suitable for formal events and business meetings.",
+                    price: "$39.99" 
+                },
+                { 
+                    color: "green", 
+                    image: "Emerald Green Shirt.jpeg",
+                    name: "Emerald Green Shirt",
+                    description: "A bold emerald green shirt to make a statement wherever you go.",
+                    price: "$32.99" 
+                },
+                { 
+                    color: "yellow", 
+                    image: "Sunshine Yellow Shirt.jpeg",
+                    name: "Sunshine Yellow Shirt",
+                    description: "A bright yellow shirt to bring some sunshine to your wardrobe.",
+                    price: "$27.99" 
+                }
+            ],
+            "dress": [
+                { 
+                    color: "red", 
+                    image: "Red Cocktail Dress.jpeg",
+                    name: "Red Cocktail Dress",
+                    description: "A stunning red dress perfect for cocktail parties and special events.",
+                    price: "$79.99" 
+                },
+                { 
+                    color: "blue", 
+                    image: "Blue Summer Dress.jpeg",
+                    name: "Blue Summer Dress",
+                    description: "A flowing blue summer dress, ideal for warm weather and beach days.",
+                    price: "$65.99" 
+                },
+                { 
+                    color: "black", 
+                    image: "lassic Black Dress.jpeg",
+                    name: "Classic Black Dress",
+                    description: "The timeless little black dress that belongs in every wardrobe.",
+                    price: "$89.99" 
+                },
+                { 
+                    color: "green", 
+                    image: "Emerald Evening Dress.jpeg",
+                    name: "Emerald Evening Dress",
+                    description: "An elegant emerald green dress for formal events and special occasions.",
+                    price: "$94.99" 
+                },
+                { 
+                    color: "yellow", 
+                    image: "Sunshine Yellow Sundress.jpeg",
+                    name: "Sunshine Yellow Sundress",
+                    description: "A cheerful yellow sundress, perfect for picnics and casual outings.",
+                    price: "$59.99" 
+                }
+            ],
+            "jeans": [
+                { 
+                    color: "blue", 
+                    image: "Classic Blue Jeans.jpeg",
+                    name: "Classic Blue Jeans",
+                    description: "Timeless blue jeans that go with everything in your wardrobe.",
+                    price: "$49.99" 
+                },
+                { 
+                    color: "black", 
+                    image: "Black Skinny Jeans.jpeg",
+                    name: "Black Skinny Jeans",
+                    description: "Sleek black jeans with a modern skinny fit for a contemporary look.",
+                    price: "$54.99" 
+                }
+            ],
+            "jacket": [
+                { 
+                    color: "red", 
+                    image: "Red jacket.png",
+                    name: "Red jacket",
+                    description: "A cozy red knit jacket to keep you warm during colder months.",
+                    price: "$45.99" 
+                },
+                { 
+                    color: "blue", 
+                    image: "Blue jacket.png",
+                    name: "Blue jacket",
+                    description: "A traditional cable knit jacket in a calming blue tone.",
+                    price: "$49.99" 
+                },
+                { 
+                    color: "green", 
+                    image: "Green jacket.png",
+                    name: "Green jacket",
+                    description: "A luxurious green cashmere jacket for unmatched comfort and style.",
+                    price: "$99.99" 
+                }
+            ],
+            "skirt": [
+                { 
+                    color: "black", 
+                    image: "Black Pencil Skirt.jpeg",
+                    name: "Black Pencil Skirt",
+                    description: "A professional black pencil skirt for office and formal settings.",
+                    price: "$42.99" 
+                },
+                { 
+                    color: "red", 
+                    image: "Red Pleated Skirt.jpeg",
+                    name: "Red Pleated Skirt",
+                    description: "A vibrant red pleated skirt with a playful silhouette.",
+                    price: "$39.99" 
+                },
+                { 
+                    color: "yellow", 
+                    image: "Yellow A-Line Skirt.jpeg",
+                    name: "Yellow A-Line Skirt",
+                    description: "A cheerful yellow A-line skirt perfect for spring and summer.",
+                    price: "$36.99" 
+                }
+            ]
+        };
+
+        // Common color hex codes for displaying swatches
+        const colorHexCodes = {
+            "red": "#d84f57",
+            "blue": "#3b5998",
+            "green": "#4CAF50",
+            "black": "#333333",
+            "yellow": "#FFC107",
+            "purple": "#9C27B0",
+            "pink": "#E91E63",
+            "orange": "#FF9800",
+            "brown": "#795548",
+            "gray": "#9E9E9E",
+            "white": "#FFFFFF"
+        };
+
+        // DOM elements
+        const searchInput = document.getElementById('clothing-search');
+        const searchButton = document.getElementById('search-btn');
+        const initialMessage = document.getElementById('initial-message');
+        const resultsView = document.getElementById('results-view');
+        const resultTitle = document.getElementById('result-title');
+        const clothingImage = document.getElementById('clothing-image');
+        const clothingName = document.getElementById('clothing-name');
+        const clothingColor = document.getElementById('clothing-color');
+        const colorSwatch = document.getElementById('color-swatch');
+        const clothingDescription = document.getElementById('clothing-description');
+        const clothingPrice = document.getElementById('clothing-price');
+        const exampleTags = document.querySelectorAll('.example-tag');
+
+        // Search function
+        function searchClothing() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                alert('Please enter a color and clothing item');
+                return;
+            }
+            
+            // Parse search term to extract color and clothing type
+            const colorMatches = ["red", "blue", "green", "black", "yellow", "purple", "pink", "orange", "brown", "gray", "white"]
+                .filter(color => searchTerm.includes(color));
+            
+            const clothingMatches = ["shirt", "dress", "jeans", "jacket", "skirt"]
+                .filter(item => searchTerm.includes(item));
+            
+            // Check if we found valid matches
+            if (colorMatches.length === 0 || clothingMatches.length === 0) {
+                showNoResults("Please specify both a color and a clothing item (e.g., 'red shirt')");
+                return;
+            }
+            
+            const color = colorMatches[0];
+            const clothingType = clothingMatches[0];
+            
+            // Look for matching items
+            if (clothingItems[clothingType]) {
+                const matchingItems = clothingItems[clothingType].filter(item => 
+                    item.color === color
+                );
+                
+                if (matchingItems.length > 0) {
+                    // Display a random matching item
+                    const randomIndex = Math.floor(Math.random() * matchingItems.length);
+                    displayClothingItem(matchingItems[randomIndex], color, clothingType);
+                } else {
+                    showNoResults(`Sorry, we don't have ${color} ${clothingType}s in stock right now.`);
+                }
+            } else {
+                showNoResults(`Sorry, we don't carry ${clothingType}s at this time.`);
+            }
+        }
+
+        // Display a clothing item
+        function displayClothingItem(item, color, clothingType) {
+            // Update the UI
+            initialMessage.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+            
+            resultTitle.textContent = `${capitalizeFirstLetter(color)} ${capitalizeFirstLetter(clothingType)}`;
+            clothingImage.src = item.image;
+            clothingImage.alt = item.name;
+            clothingName.textContent = item.name;
+            clothingColor.textContent = capitalizeFirstLetter(color);
+            colorSwatch.style.backgroundColor = colorHexCodes[color] || '#999';
+            clothingDescription.textContent = item.description;
+            clothingPrice.textContent = item.price;
+        }
+
+        // Show no results message
+        function showNoResults(message) {
+            initialMessage.classList.remove('hidden');
+            resultsView.classList.add('hidden');
+            initialMessage.textContent = message;
+        }
+
+        // Helper function to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Event listeners
+        searchButton.addEventListener('click', searchClothing);
+        
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchClothing();
+            }
+        });
+        
+        // Example tag click handlers
+        exampleTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                searchInput.value = this.textContent;
+                searchClothing();
+            });
+        });
+    </script>
+</body>
+</html>

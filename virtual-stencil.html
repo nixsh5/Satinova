@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On | Fashion Store</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #d84f57;
+            margin-bottom: 10px;
+        }
+
+        .try-on-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .mannequin-container {
+            position: relative;
+            width: 700px;
+            height: 750px;
+            margin-bottom: 20px;
+        }
+
+        .mannequin {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            background-image: url('mannequin.jpeg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            z-index: 1;
+        }
+
+        .shirt-overlay {
+            position: absolute;
+            top: 120px; /* Adjusted to align with mannequin torso */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 300px;
+            z-index: 2;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .shirt-overlay.active {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background-color: #d84f57;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .control-btn:hover {
+            background-color: #c13c44;
+        }
+
+        .control-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .shirt-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 20px 0;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            scrollbar-width: thin;
+            scrollbar-color: #d84f57 #f5f5f5;
+        }
+
+        .shirt-option {
+            min-width: 120px;
+            height: 150px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .shirt-option.selected {
+            border-color: #d84f57;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shirt-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .shirt-name {
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .info-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .info-panel h3 {
+            margin-top: 0;
+            color: #d84f57;
+        }
+
+        .rating {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            color: #ffc107;
+            margin-right: 2px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d84f57;
+            margin: 15px 0;
+        }
+
+        .add-to-cart {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Virtual Try-On</h1>
+            <p>Try before you buy! Scroll through our shirts to see how they look.</p>
+        </header>
+
+        <div class="try-on-container">
+            <div class="mannequin-container">
+                <div class="mannequin"></div>
+                <!-- Shirt overlays will be added dynamically -->
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" id="prev-btn">Previous</button>
+                <button class="control-btn" id="next-btn">Next</button>
+            </div>
+        </div>
+
+        <div class="shirt-selector" id="shirt-selector">
+            <!-- Shirt options will be added dynamically -->
+        </div>
+
+        <div class="info-panel">
+            <h3 id="selected-shirt-name">Select a shirt</h3>
+            <div class="rating">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span>(24 reviews)</span>
+            </div>
+            <p id="selected-shirt-description">Browse our collection and select a shirt to try it on virtually.</p>
+            <p class="price" id="selected-shirt-price">$0.00</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        // Shirt data
+        const shirts = [
+            {
+                id: 1,
+                name: "Classic White Tee",
+                image: "shirt.png",
+                thumbnail: "shirt.png",
+                description: "A timeless white t-shirt that goes with everything in your wardrobe.",
+                price: "$24.99"
+            },
+            {
+                id: 2,
+                name: "Navy Blue Button-Up",
+                image: "shirt2.png",
+                thumbnail: "shirt2.png",
+                description: "Elegant navy blue button-up shirt, perfect for formal occasions.",
+                price: "$39.99"
+            },
+            {
+                id: 3,
+                name: "Red Plaid Flannel",
+                image: "shirt3.png",
+                thumbnail: "shirt3.png",
+                description: "Cozy red plaid flannel shirt for casual everyday wear.",
+                price: "$34.99"
+            },
+            {
+                id: 4,
+                name: "Black Graphic Tee",
+                image: "shirt4.png",
+                thumbnail: "shirt4.png",
+                description: "Stylish black graphic tee with unique design elements.",
+                price: "$29.99"
+            },
+            {
+                id: 5,
+                name: "Striped Polo Shirt",
+                image: "shirt5.png",
+                thumbnail: "shirt5.png",
+                description: "Classic striped polo shirt for a smart casual look.",
+                price: "$32.99"
+            }
+        ];
+
+        // DOM elements
+        const mannequinContainer = document.querySelector('.mannequin-container');
+        const shirtSelector = document.getElementById('shirt-selector');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const selectedShirtName = document.getElementById('selected-shirt-name');
+        const selectedShirtDescription = document.getElementById('selected-shirt-description');
+        const selectedShirtPrice = document.getElementById('selected-shirt-price');
+
+        let currentShirtIndex = 0;
+
+        // Create shirt overlays
+        shirts.forEach((shirt, index) => {
+            // Create shirt overlay
+            const shirtOverlay = document.createElement('img');
+            shirtOverlay.src = shirt.image;
+            shirtOverlay.alt = shirt.name;
+            shirtOverlay.className = 'shirt-overlay';
+            shirtOverlay.id = `shirt-${shirt.id}`;
+            if (index === 0) {
+                shirtOverlay.classList.add('active');
+            }
+            mannequinContainer.appendChild(shirtOverlay);
+
+            // Create shirt option in selector
+            const shirtOption = document.createElement('div');
+            shirtOption.className = 'shirt-option';
+            if (index === 0) {
+                shirtOption.classList.add('selected');
+            }
+            shirtOption.dataset.index = index;
+            
+            const shirtImg = document.createElement('img');
+            shirtImg.src = shirt.thumbnail;
+            shirtImg.alt = shirt.name;
+            shirtImg.className = 'shirt-thumbnail';
+            
+            const shirtNameSpan = document.createElement('span');
+            shirtNameSpan.className = 'shirt-name';
+            shirtNameSpan.textContent = shirt.name;
+            
+            shirtOption.appendChild(shirtImg);
+            shirtOption.appendChild(shirtNameSpan);
+            shirtSelector.appendChild(shirtOption);
+
+            // Add click event to shirt option
+            shirtOption.addEventListener('click', () => {
+                selectShirt(index);
+            });
+        });
+
+        // Initialize info panel
+        updateInfoPanel(currentShirtIndex);
+
+        // Function to update the displayed shirt
+        function selectShirt(index) {
+            // Hide all shirt overlays
+            document.querySelectorAll('.shirt-overlay').forEach(overlay => {
+                overlay.classList.remove('active');
+            });
+            
+            // Show selected shirt overlay
+            document.getElementById(`shirt-${shirts[index].id}`).classList.add('active');
+            
+            // Update shirt options selection state
+            document.querySelectorAll('.shirt-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`.shirt-option[data-index="${index}"]`).classList.add('selected');
+            
+            // Update current index
+            currentShirtIndex = index;
+            
+            // Update info panel
+            updateInfoPanel(currentShirtIndex);
+            
+            // Update button states
+            updateButtonStates();
+        }
+
+        // Function to update the info panel
+        function updateInfoPanel(index) {
+            const shirt = shirts[index];
+            selectedShirtName.textContent = shirt.name;
+            selectedShirtDescription.textContent = shirt.description;
+            selectedShirtPrice.textContent = shirt.price;
+        }
+
+        // Function to update button states
+        function updateButtonStates() {
+            prevBtn.disabled = currentShirtIndex === 0;
+            nextBtn.disabled = currentShirtIndex === shirts.length - 1;
+        }
+
+        // Event listeners for control buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentShirtIndex > 0) {
+                selectShirt(currentShirtIndex - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentShirtIndex < shirts.length - 1) {
+                selectShirt(currentShirtIndex + 1);
+            }
+        });
+
+        // Initialize button states
+        updateButtonStates();
+    </script>
+</body>
+</html>
