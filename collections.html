@@ -4,8 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collections - Satinova</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3366;
+            --secondary: #6c63ff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-brand a {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-brand a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .nav-brand a:hover::after {
+            transform: translateX(0);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            transform: scaleX(1);
+        }
+
+        .cart-icon {
+            position: relative;
+            color: var(--light);
+            text-decoration: none;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: var(--light);
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* Collections Page Styles */
+        .collections-page {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .collection-section {
+            margin-bottom: 4rem;
+        }
+
+        .collection-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .collection-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .collection-header p {
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Ensure 3 items per row */
+            gap: 1.5rem; /* Reduced gap for a more compact layout */
+            padding: 1rem;
+        }
+
+        .collection-item {
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .collection-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .collection-item img {
+            width: 100%;
+            height: 250px; /* Adjust image height */
+            object-fit: cover;
+        }
+
+        .collection-item h3 {
+            padding: 1rem 1rem 0.5rem;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        .collection-item p {
+            padding: 0 1rem 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--light);
+            padding: 4rem 2rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            color: var(--light);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .collection-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .collection-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -114,15 +351,25 @@
             </div>
             <div class="footer-section">
                 <h4>Contact</h4>
-                <p>Email: contact@satinova.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
+                <p>Email: hiharsh40@gmail.com</p>
+                <p>Phone: +91 70210 81356 </p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 Satinova. All rights reserved.</p>
+            <p>&copy; 2025 Satinova. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="main.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>
