@@ -3,258 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fashion Store</title>
+    <title>Trend to Play - Satinova</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
+        :root {
+            --primary: #ff3366;
+            --secondary: #6c63ff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background-color: #fff;
+            background-color: #f8f9fa;
+            color: var(--dark);
             min-height: 100vh;
-            display: block;
         }
 
-        .top-nav {
-            background-color: #333;
-            padding: 1rem;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
         }
 
-        .brand-name {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-left: 2rem;
+        .nav-brand a {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 2px;
         }
 
         .nav-links {
             display: flex;
             gap: 2rem;
-            margin-right: 2rem;
         }
 
         .nav-links a {
-            color: #fff;
+            color: var(--light);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
         }
 
-        .nav-links a.active {
-            color: #fff;
-            border-bottom: 2px solid #fff;
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
         }
 
-        .container {
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .cart-icon {
+            position: relative;
+            color: var(--light);
+            text-decoration: none;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: var(--light);
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 80px;
+            padding: 2rem;
             display: flex;
-            margin-top: 4rem;
-            padding: 1rem;
             gap: 2rem;
-            min-height: calc(100vh - 4rem);
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .sidebar {
-            width: 200px;
-            padding: 1rem;
+        /* Model Section */
+        .model-section {
+            width: 30%;
+            min-width: 400px;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        .categories {
-            list-style: none;
+        .model-view {
+            height: 600px;
+            background: #f7fafc;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        .categories li {
-            margin-bottom: 1rem;
+        .model {
+            width: 300px;
+            height: 500px;
+            background-image: url('https://images.unsplash.com/photo-1554412933-514a83d2f3c8?w=300');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
         }
 
-        .categories a {
-            text-decoration: none;
-            color: #333;
-            font-size: 0.9rem;
-        }
-
-        .categories a.active {
-            font-weight: bold;
-        }
-
-        .content {
-            flex: 1;
-        }
-
-        .filters {
+        .controls {
             display: flex;
             gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .reset-btn {
+            background: #f7fafc;
+            color: var(--dark);
+        }
+
+        .save-btn {
+            background: var(--gradient);
+            color: var(--light);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Clothing Section */
+        .clothing-section {
+            flex: 1;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .clothing-section h2 {
+            font-size: 1.5rem;
             margin-bottom: 2rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .filters select {
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #fff;
-            min-width: 120px;
-        }
-
-        .product-grid {
+        .clothing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
         }
 
-        .product-item {
-            text-align: center;
+        .clothing-item {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .product-item img {
-            width: 200px;
-            height: 250px;
+        .clothing-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .clothing-item.selected {
+            border-color: var(--primary);
+            background: rgba(255, 51, 102, 0.05);
+        }
+
+        .clothing-item img {
+            width: 100%;
+            height: 180px;
             object-fit: cover;
-            margin-bottom: 0.5rem;
-            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 1rem;
         }
 
-        .product-item p {
-            font-size: 0.9rem;
-            color: #333;
+        .clothing-item span {
+            color: var(--dark);
+            font-weight: 500;
+            text-align: center;
         }
 
-        .featured {
-            width: 300px;
-            padding: 1rem;
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--light);
+            padding: 2rem;
+            margin-top: 4rem;
         }
 
-        .featured img {
-            width: 300px;
-            height: 600px;
-            object-fit: cover;
-            border: 1px solid #eee;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
         }
 
         @media (max-width: 1200px) {
-            .featured {
-                display: none;
+            .main-container {
+                flex-direction: column;
+            }
+
+            .model-section {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .clothing-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-
-            .categories {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-
-            .categories li {
-                margin-bottom: 0;
-            }
-
-            .product-item img {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 4/5;
-            }
-
-            .brand-name {
-                margin-left: 1rem;
-            }
-
             .nav-links {
-                margin-right: 1rem;
-                font-size: 0.8rem;
+                display: none;
+            }
+
+            .clothing-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <div class="brand-name">Satinova</div>
-        <div class="nav-links">
-            <a href="#" class="active">CREATE</a>
-            <a href="#">TOP LOOKS</a>
-            <a href="#">STYLISTS</a>
-            <a href="#">SPRING 2024 LOOKS</a>
-            <a href="#">FEATURED DESIGNERS</a>
-        </div>
-    </nav>
-
-    <div class="container">
-        <aside class="sidebar">
-            <ul class="categories">
-                <li><a href="#" class="active">ALL</a></li>
-                <li><a href="#">TOPS</a></li>
-                <li><a href="#">DRESSES</a></li>
-                <li><a href="#">BOTTOMS</a></li>
-                <li><a href="#">OUTERWEAR</a></li>
-                <li><a href="#">SHOES</a></li>
-                <li><a href="#">BAGS</a></li>
-                <li><a href="#">JEWELRY</a></li>
-                <li><a href="#">ACCESSORIES</a></li>
-                <li><a href="#">DESIGNER</a></li>
-            </ul>
-        </aside>
-
-        <main class="content">
-            <div class="filters">
-                <select>
-                    <option>ALL TRENDS</option>
-                </select>
-                <select>
-                    <option>BRAND</option>
-                </select>
-                <select>
-                    <option>COLOR</option>
-                </select>
-            </div>
-
-            <div class="product-grid">
-                <div class="product-item">
-                    <img src="Green Jacket.jpeg" alt="Product 1">
-                    <p>Antik Denim Jeans</p>
-                </div>
-                <div class="product-item">
-                    <img src="Red Jacket.png" alt="Product 2">
-                    <p>Designer Top</p>
-                </div>
-                <div class="product-item">
-                    <img src="Black Formal Shirt.jpeg" alt="Product 3">
-                    <p>Summer Dress</p>
-                </div>
-                <div class="product-item">
-                    <img src="Emerald Evening Dress.jpeg" alt="Product 4">
-                    <p>Classic Jeans</p>
-                </div>
-                <div class="product-item">
-                    <img src="Red Cocktail Dress.jpeg" alt="Product 5">
-                    <p>Leather Mesh</p>
-                </div>
-                <div class="product-item">
-                    <img src="Sunshine Yellow Shirt.jpeg" alt="Product 6">
-                    <p>Designer Blouse</p>
-                </div>
-            </div>
-        </main>
-
-        <aside class="featured">
-            <img src="https://placehold.co/300x600" alt="Featured Look">
-        </aside>
+<nav class="navbar">
+    <div class="nav-brand">
+        <a href="index.html">SATINOVA</a>
     </div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="collections.html">Collections</a>
+        <a href="about.html">About</a>
+    </div>
+    <div class="nav-icons">
+        <a href="cart.html" class="cart-icon">
+            <span class="material-icons">shopping_bag</span>
+            <span class="cart-count">0</span>
+        </a>
+    </div>
+</nav>
+
+<div class="main-container">
+    <div class="model-section">
+        <div class="model-view">
+            <div class="model"></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn reset-btn">Reset Look</button>
+            <button class="control-btn save-btn">Save Look</button>
+        </div>
+    </div>
+
+    <div class="clothing-section">
+        <h2>Select Items to Try</h2>
+        <div class="clothing-grid">
+            <div class="clothing-item" data-item="dress">
+                <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=200" alt="Summer Dress">
+                <span>Summer Dress</span>
+            </div>
+            <div class="clothing-item" data-item="jacket">
+                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200" alt="Denim Jacket">
+                <span>Denim Jacket</span>
+            </div>
+            <div class="clothing-item" data-item="blouse">
+                <img src="https://images.unsplash.com/photo-1598554747436-c9293d6a70b4?w=200" alt="Silk Blouse">
+                <span>Silk Blouse</span>
+            </div>
+            <div class="clothing-item" data-item="skirt">
+                <img src="https://images.unsplash.com/photo-1583496661160-fb5886a0aaaa?w=200" alt="Pleated Skirt">
+                <span>Pleated Skirt</span>
+            </div>
+            <div class="clothing-item" data-item="pants">
+                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=200" alt="Wide Leg Pants">
+                <span>Wide Leg Pants</span>
+            </div>
+            <div class="clothing-item" data-item="sweater">
+                <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=200" alt="Knit Sweater">
+                <span>Knit Sweater</span>
+            </div>
+            <div class="clothing-item" data-item="coat">
+                <img src="https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=200" alt="Winter Coat">
+                <span>Winter Coat</span>
+            </div>
+            <div class="clothing-item" data-item="jumpsuit">
+                <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200" alt="Elegant Jumpsuit">
+                <span>Elegant Jumpsuit</span>
+            </div>
+            <div class="clothing-item" data-item="blazer">
+                <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=200" alt="Classic Blazer">
+                <span>Classic Blazer</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-content">
+        <p>&copy; 2024 Satinova. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Handle clothing item selection
+    document.querySelectorAll('.clothing-item').forEach(item => {
+        item.addEventListener('click', () => {
+            item.classList.toggle('selected');
+        });
+    });
+
+    // Reset button handler
+    document.querySelector('.reset-btn').addEventListener('click', () => {
+        document.querySelectorAll('.clothing-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+    });
+
+    // Save button handler
+    document.querySelector('.save-btn').addEventListener('click', () => {
+        const selectedItems = Array.from(document.querySelectorAll('.clothing-item.selected'))
+            .map(item => item.dataset.item);
+        console.log('Saved look with items:', selectedItems);
+    });
+</script>
 </body>
 </html>
