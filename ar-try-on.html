@@ -3,47 +3,554 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebAR Clothing Try-On</title>
-    <script src="https://cdn.jsdelivr.net/npm/deepar@latest"></script>
+    <title>Virtual Try-On Experience</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        video { width: 100%; max-width: 600px; display: block; margin: auto; }
-        button { margin-top: 10px; padding: 10px; font-size: 16px; cursor: pointer; }
+        :root {
+            --primary: #ff3366;
+            --secondary: #6c63ff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styles */
+        .header {
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            transform: scaleX(1);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+                url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.3;
+            mix-blend-mode: overlay;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* AR Container */
+        .ar-container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .video-container {
+            background: var(--light);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: var(--transition);
+        }
+
+        .camera-placeholder {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+
+        .camera-placeholder .small {
+            margin-top: 1rem;
+            opacity: 0.6;
+        }
+
+        /* Clothing Options */
+        .clothing-options {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .clothing-options h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .clothing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .clothing-item {
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .clothing-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .clothing-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 0.8rem;
+        }
+
+        .clothing-item span {
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        /* Features Section */
+        .features {
+            background: var(--dark);
+            padding: 6rem 2rem;
+            color: var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.1;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* Info Section */
+        .info {
+            max-width: 1200px;
+            margin: 6rem auto;
+            padding: 2rem;
+        }
+
+        .info h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-content {
+            background: var(--light);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .info-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-item h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Button Styles */
+        .cta-button {
+            display: inline-block;
+            background: var(--gradient);
+            color: var(--light);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--gradient);
+            opacity: 0.2;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+
+            .ar-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .camera-placeholder {
+                height: 300px;
+            }
+
+            .clothing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
+    <header class="header">
+        <nav class="nav">
+            <h1>Satinova</h1>
+        </nav>
+    </header>
 
-<h1>Try On Clothes in WebAR</h1>
-<video id="video" autoplay playsinline></video>
-<button onclick="loadClothingModel()">Try On Shirt</button>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Virtual Fitting Room</h1>
+                <p>Try clothes on virtually using our cutting-edge AR technology</p>
+                <button id="startAR" class="cta-button">Start Try-On Experience</button>
+            </div>
+        </section>
 
-<script>
-    let deepAR;
+        <section class="ar-container">
+            <div class="video-container">
+                <div id="cameraPlaceholder" class="camera-placeholder">
+                    <p>Camera feed will appear here</p>
+                    <p class="small">Please allow camera access when prompted</p>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="clothing-options">
+                    <h3>Select an Item to Try On</h3>
+                    <div class="clothing-grid">
+                        <div class="clothing-item" data-item="tshirt">
+                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200" alt="T-Shirt">
+                            <span>Basic T-Shirt</span>
+                        </div>
+                        <div class="clothing-item" data-item="jacket">
+                            <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=200" alt="Jacket">
+                            <span>Denim Jacket</span>
+                        </div>
+                        <div class="clothing-item" data-item="dress">
+                            <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=200" alt="Dress">
+                            <span>Summer Dress</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    async function initDeepAR() {
-        deepAR = await DeepAR.create({
-            licenseKey: "YOUR_DEEPAR_LICENSE_KEY",  // Replace with your DeepAR license key
-            canvas: document.createElement("canvas"),
-            width: 640,
-            height: 480,
-            faceTracking: false,
-            bodyTracking: true  // Enable body tracking
+        <section class="features">
+            <h2>How It Works</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">📸</div>
+                    <h3>Enable Camera</h3>
+                    <p>Allow camera access to start your virtual fitting experience</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">👕</div>
+                    <h3>Choose Clothes</h3>
+                    <p>Select from our wide range of virtual clothing items</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✨</div>
+                    <h3>Try It On</h3>
+                    <p>See how the clothes look on you in real-time</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="info">
+            <h2>About Our AR Technology</h2>
+            <div class="info-content">
+                <p>Our advanced augmented reality technology uses computer vision and real-time tracking to create a seamless virtual try-on experience. The system accurately maps clothing items to your body, adjusting for movement and maintaining realistic proportions.</p>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h4>Real-time Tracking</h4>
+                        <p>Advanced body tracking ensures clothes move naturally with you</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Accurate Sizing</h4>
+                        <p>Virtual measurements help you find the perfect fit</p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Realistic Rendering</h4>
+                        <p>See accurate fabric textures and behavior</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 FashionAR. Virtual Try-On Experience</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startARButton = document.getElementById('startAR');
+            const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+            let stream = null;
+
+            startARButton.addEventListener('click', async () => {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    const videoElement = document.createElement('video');
+                    videoElement.srcObject = stream;
+                    videoElement.autoplay = true;
+                    videoElement.style.width = '100%';
+                    videoElement.style.height = '100%';
+                    videoElement.style.objectFit = 'cover';
+                    
+                    cameraPlaceholder.innerHTML = '';
+                    cameraPlaceholder.appendChild(videoElement);
+                    
+                    startARButton.textContent = 'Stop AR Experience';
+                } catch (err) {
+                    console.error('Error accessing camera:', err);
+                    alert('Unable to access camera. Please ensure you have granted camera permissions.');
+                }
+            });
+
+            // Clean up video stream when leaving the page
+            window.addEventListener('beforeunload', () => {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            });
+
+            // Handle clothing item selection
+            const clothingItems = document.querySelectorAll('.clothing-item');
+            clothingItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove active state from all items
+                    clothingItems.forEach(i => i.style.border = 'none');
+                    // Add active state to selected item
+                    item.style.border = '2px solid var(--primary)';
+                    // Here you would typically trigger AR overlay for the selected item
+                    console.log('Selected item:', item.dataset.item);
+                });
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 50) {
+                    header.style.padding = '0.5rem 0';
+                    header.style.background = 'rgba(26, 26, 26, 0.95)';
+                } else {
+                    header.style.padding = '1rem 0';
+                    header.style.background = 'rgba(26, 26, 26, 0.98)';
+                }
+            });
         });
-
-        deepAR.startVideo(true);
-        document.getElementById("video").srcObject = deepAR.getVideoStream();
-    }
-
-    async function loadClothingModel() {
-        if (!deepAR) return;
-        await deepAR.switchEffect({
-            slot: "body",
-            path: "https://drive.google.com/file/d/114zT8lG5DpA1d3hUlwRVd4Ew1_xHTj0g/view?usp=sharing"  // Replace with your hosted 3D model
-        });
-    }
-
-    initDeepAR();
-</script>
-
+    </script>
 </body>
 </html>
