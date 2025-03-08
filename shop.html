@@ -4,68 +4,471 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop - Satinova</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff3366;
+            --secondary: #6c63ff;
+            --dark: #1a1a1a;
+            --light: #ffffff;
+            --gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: rgba(26, 26, 26, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-brand a {
+            color: var(--primary);
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-brand a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .nav-brand a:hover::after {
+            transform: translateX(0);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            transform: scaleX(1);
+        }
+
+        .cart-icon {
+            position: relative;
+            color: var(--light);
+            text-decoration: none;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: var(--light);
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 50%;
+        }
+
+        /* Shop Page Styles */
+        .shop-page {
+            margin-top: 80px;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .filters {
+            width: 250px;
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            left: 2rem;
+        }
+
+        .filters h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .filter-section label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-section label:hover {
+            color: var(--primary);
+        }
+
+        .filter-section input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .products-grid {
+            margin-left: 270px;
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 1rem;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .products-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .products-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .products-grid::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .product-card {
+            flex: 0 0 300px;
+            background: var(--light);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .product-price {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .add-to-cart {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--gradient);
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--light);
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section a {
+            color: var(--light);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 1024px) {
+            .shop-page {
+                flex-direction: column;
+            }
+
+            .filters {
+                position: static;
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+
+            .products-grid {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">
-            <a href="index.html">SATINOVA</a>
+<nav class="navbar">
+    <div class="nav-brand">
+        <a href="index.html">SATINOVA</a>
+    </div>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="shop.html" class="active">Shop</a>
+        <a href="collections.html">Collections</a>
+        <a href="about.html">About</a>
+    </div>
+    <div class="nav-icons">
+        <a href="cart.html" class="cart-icon">
+            <span class="material-icons">shopping_bag</span>
+            <span class="cart-count">0</span>
+        </a>
+    </div>
+</nav>
+
+<main class="shop-page">
+    <div class="filters">
+        <h2>Filters</h2>
+        <div class="filter-section">
+            <h3>Categories</h3>
+            <label><input type="checkbox" name="category" value="dresses"> Dresses</label>
+            <label><input type="checkbox" name="category" value="tops"> Tops</label>
+            <label><input type="checkbox" name="category" value="bottoms"> Bottoms</label>
+            <label><input type="checkbox" name="category" value="accessories"> Accessories</label>
         </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html" class="active">Shop</a>
+        <div class="filter-section">
+            <h3>Price Range</h3>
+            <label><input type="checkbox" name="price" value="0-50"> $0 - $50</label>
+            <label><input type="checkbox" name="price" value="51-100"> $51 - $100</label>
+            <label><input type="checkbox" name="price" value="101-200"> $101 - $200</label>
+            <label><input type="checkbox" name="price" value="201+"> $201+</label>
+        </div>
+        <div class="filter-section">
+            <h3>Size</h3>
+            <label><input type="checkbox" name="size" value="xs"> XS</label>
+            <label><input type="checkbox" name="size" value="s"> S</label>
+            <label><input type="checkbox" name="size" value="m"> M</label>
+            <label><input type="checkbox" name="size" value="l"> L</label>
+            <label><input type="checkbox" name="size" value="xl"> XL</label>
+        </div>
+    </div>
+
+    <div class="products-grid" id="products-container">
+        <!-- Products will be dynamically populated -->
+    </div>
+</main>
+
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>About Satinova</h4>
+            <p>Discover elegant fashion pieces crafted with passion and precision.</p>
+        </div>
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <a href="shop.html">Shop</a>
             <a href="collections.html">Collections</a>
             <a href="about.html">About</a>
         </div>
-        <div class="nav-icons">
-            <a href="cart.html" class="cart-icon">
-                <span class="material-icons">shopping_bag</span>
-                <span class="cart-count">0</span>
-            </a>
+        <div class="footer-section">
+            <h4>Contact</h4>
+            <p>Email: contact@satinova.com</p>
+            <p>Phone: +1 (555) 123-4567</p>
         </div>
-    </nav>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 Satinova. All rights reserved.</p>
+    </div>
+</footer>
 
-    <main class="shop-page">
-        <div class="filters">
-            <h2>Filters</h2>
-            <div class="filter-section">
-                <h3>Categories</h3>
-                <label><input type="checkbox" name="category" value="dresses"> Dresses</label>
-                <label><input type="checkbox" name="category" value="tops"> Tops</label>
-                <label><input type="checkbox" name="category" value="bottoms"> Bottoms</label>
-                <label><input type="checkbox" name="category" value="accessories"> Accessories</label>
-            </div>
-        </div>
+<script>
+    // Sample product data
+    const products = [
+        {
+            id: 1,
+            name: "Summer Dress",
+            price: 89.99,
+            image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600",
+            category: "dresses"
+        },
+        {
+            id: 2,
+            name: "Evening Gown",
+            price: 199.99,
+            image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600",
+            category: "dresses"
+        },
+        {
+            id: 3,
+            name: "Silk Blouse",
+            price: 69.99,
+            image: "https://images.unsplash.com/photo-1598554747436-c9293d6a70b4?w=600",
+            category: "tops"
+        },
+        {
+            id: 4,
+            name: "Classic Blazer",
+            price: 129.99,
+            image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600",
+            category: "tops"
+        }
+    ];
 
-        <div class="products-grid" id="products-container">
-            <!-- Products will be populated by JavaScript -->
-        </div>
-    </main>
+    // Render products
+    function renderProducts() {
+        const container = document.getElementById('products-container');
+        container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-price">$${product.price}</p>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+    }
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>About Satinova</h4>
-                <p>Discover elegant fashion pieces crafted with passion and precision.</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <a href="shop.html">Shop</a>
-                <a href="collections.html">Collections</a>
-                <a href="about.html">About</a>
-            </div>
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <p>Email: contact@satinova.com</p>
-                <p>Phone: +1 (555) 123-4567</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Satinova. All rights reserved.</p>
-        </div>
-    </footer>
+    // Add to cart functionality
+    function addToCart(productId) {
+        const cartCount = document.querySelector('.cart-count');
+        const currentCount = parseInt(cartCount.textContent);
+        cartCount.textContent = currentCount + 1;
+        console.log(`Added product ${productId} to cart`);
+    }
 
-    <script src="main.js"></script>
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        renderProducts();
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
 </body>
 </html>
